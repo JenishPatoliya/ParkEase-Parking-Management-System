@@ -32,6 +32,25 @@ ParkingLotSystem/
 └── ui/                     ← Frontend interface
     └── parking-lot.html    ← Web UI dashboard communicating via fetch() REST APIs
 ```
+## Architecture Overview
+
+User (Browser or Terminal)
+          |
+    ┌─────┴──────┐
+    │            │
+ Console      Web UI (localhost:8080)
+    │            │
+    └─────┬──────┘
+          │
+     ParkingLot (Singleton)
+          │
+    ┌─────┼─────┐
+    │     │     │
+ Floors Tickets Revenue
+    │
+  Slots ← Vehicle (via Factory)
+              │
+           Ticket ← Payment (Cash/Card via Strategy)
 
 ---
 
