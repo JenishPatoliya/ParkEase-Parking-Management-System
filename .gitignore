@@ -1,0 +1,11 @@
+# Compiled Binaries
+*.exe
+main
+test_main.exe
+
+# Build directories
+build/
+.vscode/
+.idea/
+*.o
+*.obj
