@@ -2,8 +2,6 @@
 
 ![C++](https://img.shields.io/badge/C++-17-blue?style=for-the-badge&logo=cplusplus)
 ![OOP](https://img.shields.io/badge/OOP-Design_Patterns-green?style=for-the-badge)
-![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey?style=for-the-badge&logo=windows)
-![Status](https://img.shields.io/badge/Status-Complete-brightgreen?style=for-the-badge)
 ![UI](https://img.shields.io/badge/Web_UI-HTML%2FCSS%2FJS-orange?style=for-the-badge)
 
 > A lightweight, cross-platform C++17 Parking Management System that combines a classic console interactive terminal with a modern, responsive Web UI dashboard. It utilizes key OOP principles, design patterns, file stream persistence, and low-level Winsock TCP socket programming.
