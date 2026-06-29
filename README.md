@@ -1,6 +1,6 @@
 # ParkEase: Parking Management System
 
-ParkEase is a lightweight, cross-platform C++17 Parking Management System that combines a classic console interactive terminal with a modern, responsive Web UI dashboard. It utilizes key OOP principles, design patterns, file stream persistence, and low-level Winsock TCP socket programming.
+ParkEase is a lightweight, cross-platform C++17 Parking Management System that runs a dedicated Web UI server. It utilizes key OOP principles, design patterns, file stream persistence, and low-level Winsock TCP socket programming.
 
 ---
 
@@ -9,7 +9,7 @@ ParkEase is a lightweight, cross-platform C++17 Parking Management System that c
 ```
 ParkingLotSystem/
 ├── README.md               ← This documentation file
-├── main.cpp                ← Entry point, Console Loop & Winsock Web Server thread
+├── main.cpp                ← Entry point, Winsock Web Server running synchronously
 ├── main.exe                ← Compiled executable binary
 ├── models/                 ← Object-oriented core entities
 │   ├── Vehicle.h           ← Abstract base class for vehicles
@@ -47,9 +47,9 @@ ParkingLotSystem/
 * **Factory Pattern**: The `VehicleFactory` translates simple string inputs (e.g., `"car"`) into polymorphism-mapped subclass instances (`new Car(...)`).
 * **Strategy Pattern**: Selects distinct payment algorithms at runtime depending on customer billing selection.
 
-### 3. Networking & Multi-threading
-* **Winsock API**: An embedded raw TCP web server is created using native sockets. It binds to port `8080` to serve the HTML file and handle asynchronous REST JSON API endpoints (`/api/status`, `/api/entry`, `/api/exit`, `/api/save`).
-* **Cross-platform Threading**: Starts the web server in a background thread using native Windows `CreateThread` (and POSIX `pthread_create` fallback) so the console and browser UI can run in parallel without blocking.
+### 3. Networking & TCP Server
+* **Winsock API**: An embedded raw TCP web server is created using native sockets. It binds to port `8080` to serve the HTML file and handle REST JSON API endpoints (`/api/status`, `/api/entry`, `/api/exit`, `/api/save`).
+* **Synchronous Server Thread**: The server loops and processes HTTP requests synchronously on the main application thread, maintaining lightweight operation and dedicated UI serving.
 
 ### 4. File-System Storage
 * **Flat-File Database**: `saveData()` and `loadData()` serialize and parse records sequentially (`REVENUE`, `TICKETS`, comma-separated values) to keep slots and ticket states persistent.
@@ -95,6 +95,6 @@ Open your web browser and navigate to:
 
 ## ⚙️ How to Control the Application
 
-1. **Via the Browser (Recommended)**: Use the modern dashboard to register entries, look up tickets, process payments, see visual parking slot maps, and trigger data saves.
-2. **Via the Terminal Console**: Use options `1-6` to perform the same actions.
-3. **Save/Load**: The system automatically restores the active tickets from `data/parking_data.txt` on startup, and automatically updates the file when you exit using option `6` (Exit System).
+1. **Via the Browser**: Use the modern dashboard to register entries, look up tickets, process payments, see visual parking slot maps, and trigger data saves.
+2. **Closing the Server**: Press `Ctrl+C` in your terminal to shut down the server.
+3. **Save/Load**: The system automatically restores the active tickets from `data/parking_data.txt` on startup, and updates the state in memory. You can trigger data saving directly from the Web UI interface.

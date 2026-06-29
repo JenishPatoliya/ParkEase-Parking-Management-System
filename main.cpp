@@ -223,162 +223,20 @@ void runHttpServer() {
 #endif
 }
 
-// ── Console Menu UI Helper Methods ────────────────────────────
-void clearScreen() {
-    #ifdef _WIN32
-        system("cls");
-    #else
-        system("clear");
-    #endif
-}
-
-void pauseScreen() {
-    cout << "\nPress Enter to continue...";
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cin.get();
-}
-
-void printHeader() {
-    cout << "\n";
-    cout << "  ================================\n";
-    cout << "    **  PARKEASE PARKING  **      \n";
-    cout << "       MANAGEMENT SYSTEM          \n";
-    cout << "  ================================\n\n";
-}
-
-void printMenu() {
-    cout << "  ================================\n";
-    cout << "           MAIN MENU             \n";
-    cout << "  ================================\n";
-    cout << "  1. Vehicle Entry               \n";
-    cout << "  2. Vehicle Exit                \n";
-    cout << "  3. View Availability           \n";
-    cout << "  4. View Active Tickets         \n";
-    cout << "  5. Save Data                   \n";
-    cout << "  6. Exit System                 \n";
-    cout << "  ================================\n";
-    cout << "  Enter choice: ";
-}
-
-void handleEntry(ParkingLot* lot) {
-    clearScreen();
-    cout << "\n=== VEHICLE ENTRY ===\n\n";
-    string plate, type;
-    cout << "Enter License Plate : ";
-    cin >> plate;
-    cout << "Vehicle Type        :\n";
-    cout << "  1. Car\n  2. Bike\n  3. Truck\n";
-    cout << "Enter choice        : ";
-    int t; cin >> t;
-    if      (t == 1) type = "CAR";
-    else if (t == 2) type = "BIKE";
-    else if (t == 3) type = "TRUCK";
-    else { cout << "Invalid!\n"; pauseScreen(); return; }
-    for (auto& c : plate) c = toupper(c);
-    string ticketId = lot->vehicleEntry(plate, type);
-    if (!ticketId.empty())
-        cout << "\nTicket ID: " << ticketId
-             << " - Keep this safe!\n";
-    pauseScreen();
-}
-
-void handleExit(ParkingLot* lot) {
-    clearScreen();
-    cout << "\n=== VEHICLE EXIT ===\n\n";
-    string ticketId;
-    cout << "Enter Ticket ID : ";
-    cin >> ticketId;
-    for (auto& c : ticketId) c = toupper(c);
-    cout << "\nPayment Method  :\n";
-    cout << "  1. Cash\n  2. Card\n";
-    cout << "Enter choice    : ";
-    int p; cin >> p;
-    if (p == 1) {
-        double cash;
-        cout << "Enter cash amount: Rs.";
-        cin >> cash;
-        lot->vehicleExit(ticketId, "CASH", cash);
-    } else if (p == 2) {
-        lot->vehicleExit(ticketId, "CARD");
-    } else {
-        cout << "Invalid choice!\n";
-    }
-    pauseScreen();
-}
-
-#ifdef _WIN32
-#include <windows.h>
-DWORD WINAPI threadFunc(LPVOID lpParam) {
-    runHttpServer();
-    return 0;
-}
-void startWebServerThread() {
-    CreateThread(NULL, 0, threadFunc, NULL, 0, NULL);
-}
-#else
-#include <pthread.h>
-void* threadFunc(void* arg) {
-    runHttpServer();
-    return nullptr;
-}
-void startWebServerThread() {
-    pthread_t thread;
-    pthread_create(&thread, nullptr, threadFunc, nullptr);
-    pthread_detach(thread);
-}
-#endif
-
 int main() {
     ParkingLot* lot = ParkingLot::getInstance("ParkEase Mall");
 
     // Load saved data on startup
-    cout << "\n  ================================\n";
-    cout << "    **  PARKEASE PARKING  **      \n";
-    cout << "  ================================\n";
+    cout << "\n====================================\n";
+    cout << "      PARKEASE PARKING SYSTEM       \n";
+    cout << "====================================\n";
     lot->loadData();
 
-    // Start Web UI Server in a background thread
-    startWebServerThread();
-    cout << "  Web UI Server running at: http://localhost:8080\n";
-    
-    pauseScreen();
+    cout << "\nWeb UI Server is running at: http://localhost:8080\n";
+    cout << "Press Ctrl+C to stop the server.\n\n";
 
-    int choice;
-    while (true) {
-        clearScreen();
-        printHeader();
-        cout << "  Web UI active at: http://localhost:8080\n\n";
-        printMenu();
-        cin >> choice;
+    runHttpServer();
 
-        switch (choice) {
-            case 1: handleEntry(lot);           break;
-            case 2: handleExit(lot);            break;
-            case 3:
-                clearScreen();
-                lot->displayAvailability();
-                pauseScreen();
-                break;
-            case 4:
-                clearScreen();
-                lot->displayActiveTickets();
-                pauseScreen();
-                break;
-            case 5:
-                clearScreen();
-                lot->saveData();
-                pauseScreen();
-                break;
-            case 6:
-                clearScreen();
-                cout << "Saving data...\n";
-                lot->saveData();
-                cout << "\n  Thank you for using ParkEase!\n\n";
-                return 0;
-            default:
-                cout << "Invalid choice!\n";
-                pauseScreen();
-        }
-    }
     return 0;
 }
+

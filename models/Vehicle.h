@@ -1,4 +1,4 @@
-#ifndef VEHICLE_H
+    #ifndef VEHICLE_H
 #define VEHICLE_H
 
 #include <string>
